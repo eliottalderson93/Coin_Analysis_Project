@@ -1,15 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Mellon</title>
-        {% load static %}
-        <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="{% static 'django_app\css\styles.css' %}">
-    </head>
-    
-    <body>
-        <div class='wrapper'>
+<head>
+    <title>Coin</title>
+    {% load static %}
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'django_app/css/bulma/css/bulma.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'django_app/css/bulma/css/main.css' %}">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="{% static 'django_app/javascript/coin_page.js' %}"></script> -->
+</head>
+
+<body>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    {{data.name}}
+                </h1>
+                <h2>
+                    Price: ${{data.quotes.USD.price}}
+                </h2>
+            </div>
+        </div>  
+    </section>
+    <div class="columns">
+        <div class="column">
             <p> This page will  display the historical graph of one coin that is clicked on from the homepage. Data includes historical data of whichever coin is clicked, with the date-range and perhaps significant statistical changes</p>
         </div>
+    </div>
+    <div class="chart column">
+        {%if pric%}
+        {% for prices in pric%}
+        <p>Bitcoin price: {{prices.time}} {{prices.price}}</p>
+        {% endfor %}
+        {% endif %}
+        <script>
+            var data = [30, 86, 168, 281, 303, 365];
+
+            d3.select(".chart")
+            .selectAll("div")
+            .data(data)
+            .enter()
+            .append("div")
+            .style("width", function(d) { return d * 2 + "px"; })
+            .text(function(d) { return '$ ' + d; });    
+        </script>
+    </div>
 </body>
 </html>

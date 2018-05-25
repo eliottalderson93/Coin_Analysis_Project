@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'^quotes/delete/(?P<quote_id>\d+)$', views.delquote), #posts a quote from dashboard
     url(r'^quotes/like/(?P<user_id>\d+)/(?P<quote_id>\d+)$', views.like), #posts a quote from dashboard
     #-------VALIDATIONS------
-    url(r'^users/login$', views.login) #login validation
+    url(r'^users/login$', views.login), #login validation
     #url(r'^users/(?P<id>\d+)/delete$', views.destroy) #post
+    # ------PAGE---------
+    url(r'^coin$', views.coin),
 ]

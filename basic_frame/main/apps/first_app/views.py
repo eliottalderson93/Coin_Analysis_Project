@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
-from time import gmtime, strftime
-from datetime import date, datetime
+import requests
+# from time import gmtime, strftime
+from datetime import datetime
 from .models import users, quotes
 from django.contrib import messages
 import bcrypt
@@ -202,6 +203,29 @@ def like(request,user_id,quote_id):
         return redirect('/quotes')
     else:
         return redirect('/quotes')
+# This page will render the coin page
+def coin(request):
+    # API endpoint
+    URL = "https://api.coinmarketcap.com/v2/ticker/1"
+    URL2 = "https://graphs2.coinmarketcap.com/currencies/bitcoin/"
+    # Create GET request to API
+    response2 = requests.get(URL2)
+    response = requests.get(URL)
+    # Translate to JSON
+    data = response.json()
+    mark = response2.json()
+    # Storing date and price into variables
+    datePrice = []
+    for i in range(10,20):
+        time = datetime.fromtimestamp(int((mark['price_usd'][i][0])/1000)).strftime('%Y-%m-%d')
+        price = mark['price_usd'][i][1]
+        datePrice.append({'time': time,'price': price})
+        context = {
+                "pric": datePrice
+        }
+    # pass data through return
+    print (datePrice[0]['price'])
+    return render(request, "django_app/coin_page.html", context)
 
 def logout(request):
     request.session.clear()
