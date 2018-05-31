@@ -20,10 +20,10 @@
 <body>
     <div class='wrapper'>
         <h3>{{full_name}}'s Graphs</h3>
-        <p>This page will list out all the user's graphs and allow the user to post any graph to social media. There will also
+        <!-- <p>This page will list out all the user's graphs and allow the user to post any graph to social media. There will also
             be a button to make a graph, which redirects to the make a graph page.</p>
         <p>This page will have any of the user's saved graphs or analyses they did in the past. Perhaps this page will have
-            any of their followed coin graphs.</p>
+            any of their followed coin graphs.</p> -->
         <p>Your Email: {{email}}</p>
         <p>Your ID: {{ID}}</p>
         <p>Account Creation: {{created_at}}</p>
@@ -31,20 +31,9 @@
         <h6>{{message}}</h6>
         {% endfor %} {% endif %}
         {% if plots %} {% for plot in plots %}
-        <p>New Plot!!</p>
         {% autoescape off %}
         {{ plot }}
         {% endautoescape %}
-        {% endfor %} {% endif %} {% if 1 == 2 %} {% for i in iterator %}
-        <div class='graphbox'>
-            <img src="{% static 'django_app\img' %}\examplebcplot{{i}}.svg" alt="{% static 'django_app\img' %}/whitesquare.png">
-            <form action='/graphs/analyze/{{i}}'>
-                <button>Add Graph</button>
-            </form>
-            <form action='/graphs/analyze/{{i}}/delete'>
-                <button>Add Graph</button>
-            </form>
-        </div>
         {% endfor %} {% endif %}
         <form action='/graphs'>
             <button class='logout' type='submit'>Homepage</button>
@@ -56,7 +45,7 @@
             <button class='logout' type='submit'>Logout</button>
         </form>
         <a href="/graphs/dashboard/{{ID}}">
-            <button>Make A graph</button>
+            <button class = 'logout'>Make A graph</button>
         </a>
     </div>
 </body>
