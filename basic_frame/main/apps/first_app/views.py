@@ -320,10 +320,9 @@ def graph_interface(request,user_id):
     }
     return render(request, 'django_app/create_graph.html', context)
   
-def coin(request, id,begin,end):
+def coin(request, id,time):
     # call coinHist function
     data = coinHist(id, time)
-    #data = coinHistory(id,begin, end)
     if data == False:
         return redirect("/graphs")
     info = requests.get("https://api.coinmarketcap.com/v2/ticker/"+id)
@@ -416,3 +415,7 @@ def get_coin_data(coin_id): #this function pulls the api data and returns it in 
     print('DATEPRICE ARRAY:: ', coin_name, datePrice) #returns an array of objects with keys time and price
     #call each element with datePrice[i].time or datePrice[i].price
     return datePrice
+
+
+    
+

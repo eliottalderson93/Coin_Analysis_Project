@@ -119,7 +119,13 @@ function drawChart2(data, theDiv) {
 function interactiveChart(id, theDiv){
 
 	if (id === 1){
-		URL = "http://localhost:8000/jss"
+		URL = "http://localhost:8000/jss";
+	}
+	else if (id === 825){
+		URL = "http://localhost:8000/jss2";
+	}
+	else{
+		URL = "http://localhost:8000/jss";
 	}
 
 	var svg = d3.select(theDiv),

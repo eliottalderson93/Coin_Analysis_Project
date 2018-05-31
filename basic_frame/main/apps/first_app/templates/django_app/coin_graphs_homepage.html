@@ -1,18 +1,55 @@
 <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Homepage</title>
+        {% load static %}
+        <meta charset="utf-8">
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="{% static 'django_app\css\styles.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'django_app/css/bulma/css/bulma.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'django_app/css/bulma/css/main.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'django_app/css/main.css' %}">
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="{% static 'django_app/javascript/coin_page.js' %}"></script>
+    </head>
+    <body class="is-white">
+        <div class="container">
+            <section class="hero is-link">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 class="title">
+                        <h3 class="title">Welcome {{user.fname}} {{user.lname}} </h3>
+                        </h1>
+                        <h4 class="subtitle"><a href = '/users/{{user.id}}'>Your Graphs</a></h4>
+                        <a href ='/users/logout'><button class="button is-black">Logout</button></a>
+                        <!-- <a href ='/users/logout'><button class="button is-black">Make A Graph</button></a> -->
+                        <a href ="/users/2" class="button is-black">Back to Your Graphs</a>
+                        <a href ="/graphs/dashboard/2" class="button is-black">Make A Graph</a>
+                    </div>
+                </div>  
+            </section>
+            <div class="columns">
+                <div class="column">
+                    <div class="block">
+                        <div class="box">
+                            <p>This page will be given all the coins we have on database and display the historical data for the coins. For advanced the user should be able to choose coins to follow or unfollow for analysis. For advanced the graphs will be interactive and allow the user to see datapoints and prices when they move their mouse over the graph screen. There should be a button that leads to my graphs and you should be able to click on the coins to go to the homepage.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="/coin/1/0"><h1 class="title">Bitcoin</h1></a>
+        <svg class="grph" width="960" height="500"></svg>
+        <a href="/coin/825/0"><h1 class="title">Tether</h1></a>
+        <svg class="grphtwo" width="960" height="500"></svg>
 
-<meta charset="utf-8">
-{% load static%}
-<link rel="stylesheet" type="text/css" href="{% static 'django_app/css/main.css' %}">
-<body>
-<h1>Bitcoin</h1>
-<svg class="grph" width="960" height="500"></svg>
-<h1>Tether</h1>
-<svg class="grphtwo" width="960" height="500"></svg>
-
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="{% static 'django_app/javascript/coin_page.js' %}"></script>
-<script>
-  interactiveChart(1,".grph");
-  interactiveChart(825,".grphtwo")
-</script>
-
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="{% static 'django_app/javascript/coin_page.js' %}"></script>
+        <script>
+        interactiveChart(1,".grph");
+        interactiveChart(825,".grphtwo")
+      </script>
+    </body>
+	</html>

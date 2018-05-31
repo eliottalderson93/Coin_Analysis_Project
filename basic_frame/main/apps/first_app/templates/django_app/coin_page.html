@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <section class="hero is-primary">
+    <section class="hero is-link">
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
@@ -50,9 +50,11 @@
                         <li><a>custom range:</a></li>
                         <form action="/coin/{{coins.data.id}}/custom" method="post">
                             {%csrf_token%}
-                         <li><input class="input" type="date" name="start"></li>
-                         <li><input class="input" type="date" name="end"></li>
-                         <input class="button" type="submit" name="btn">
+                        <li><input class="input" type="date" name="start"></li>
+                        <li><input class="input" type="date" name="end"></li>
+                        <input class="button" type="submit" name="btn">
+                        <a href ='/users/logout'><button class="button is-link">Logout</button></a>
+                        <!-- <a href ="/user/2"><button class="button is-link">Your Graphs</button></a> -->
                         </form>
                     </ul>
 
