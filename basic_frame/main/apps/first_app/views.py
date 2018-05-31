@@ -416,3 +416,10 @@ def get_coin_data(coin_id): #this function pulls the api data and returns it in 
     print('DATEPRICE ARRAY:: ', coin_name, datePrice) #returns an array of objects with keys time and price
     #call each element with datePrice[i].time or datePrice[i].price
     return datePrice
+<<<<<<< HEAD
+
+
+    
+
+=======
+>>>>>>> 00f7b6339581e2cdda39978b6e7a8cb5adf8e289
