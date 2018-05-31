@@ -1,5 +1,5 @@
 import requests
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 def coinHistory(id,begin_time, end_time, zero_time): #begin, end, and zero time should be unix timestamp INTEGERS
     max_time = int(unix_time(datetime.utcnow())) #current time
     #zero_time validation
@@ -18,7 +18,7 @@ def coinHistory(id,begin_time, end_time, zero_time): #begin, end, and zero time 
     elif begin_time < zero_time: #when placing the first boundary, it needs to be between the current time-1 day and minimum time only
         begin_time = zero_time
     elif begin_time > max_time:
-        begin_time = unix_time((datetime.now(pytz.utc) - datetime.timedelta(days=1))) #subtract a day from the time and turn back to unix
+        begin_time = unix_time((datetime.now(pytz.utc) - (timedelta(days=1)))) #debug #subtract a day from the time and turn back to unix
     else:
         pass #valid placement, begin time is now for sure a valid input, and we can use it as a measurement below
     
@@ -28,7 +28,7 @@ def coinHistory(id,begin_time, end_time, zero_time): #begin, end, and zero time 
     elif end_time > max_time: #when placing the second boundary, it needs to be after begin_time and before max length
         end_time = max_time #max range
     elif end_time < begin_time:
-        end_time = begin_time + unix_time(datetime.timedelta(days=1)) #min range of one day
+        end_time = begin_time + int(timedelta(days=1)) #min range of one day #debug
     else:
         pass #valid placement, we now have all valid inputs
     
@@ -52,7 +52,7 @@ def coinHistory(id,begin_time, end_time, zero_time): #begin, end, and zero time 
     max_len = int(len(data['price_usd']))
     datePrice = []
     for i in range(0,max_len): #organize data
-        time = datetime.fromtimestamp(int((data['price_usd'][i][0])/1000)).strftime('%Y-%m-%d')
+        time = datetime.fromtimestamp(int((data['price_usd'][i][0])/1000))#.strftime('%Y-%m-%d')
         price = data['price_usd'][i][1]
         datePrice.append({'time': time,'price': price})
         # return the objectList

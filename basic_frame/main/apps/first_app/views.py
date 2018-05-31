@@ -17,6 +17,8 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.models import ColumnDataSource
 from bokeh.util.browser import view
+from bokeh.models import Range1d
+from .write_json import * #dont need anymore
 from .datetimecalculation import * #sids custom function
 from .erikdatetimecalc import * #erik's custom function built on sids
 
@@ -110,13 +112,26 @@ def show(request, id): #success page
                     coin_x_call = coinHistory(call.x_coin_id,call.UNIX_begin,call.UNIX_end, call.UNIX_zero)
                     coin_y_call = coinHistory(call.y_coin_id,call.UNIX_begin,call.UNIX_end, call.UNIX_zero)
                     #call finished
-                    print(call)
+                    print('CALL::',call)
                     x = axis(coin_x_call, call.x_key) #build the axes
                     y = axis(coin_y_call, call.y_key)
-                    #print('X_AXIS_ARRAY',len(x))
-                    #print('Y_AXIS_ARRAY',len(y))
+                    print('X_AXIS_ARRAY',len(x),':of:',y[0])
+                    print('Y_AXIS_ARRAY',len(y),':of:',x[0])
+                    #print('X::',x,'/n','Y::',y)
+                    #y = [1,2,3,4,5]
+                    #x = []
+                    data = {'x_values' : x , 'y_values' : y}
+                    #x_range = Range1d(start = 0, end = 10000)
+                    #y_range = Range1d(start = 0, end = 10000)
+                    data1 = pd.DataFrame(data)
+                    source = ColumnDataSource(data1)
+                    #x_range = x_range,y_range = y_range
                     this_figure = figure(title = title,plot_width = 400, plot_height = 400,x_axis_label = call.x_label, y_axis_label = call.y_label) #build the figure
-                    this_figure.scatter(x,y,size = 8,color = 'blue', alpha=1) #scatterplot
+                    this_figure.scatter('x_values', 'y_values',source = source)
+                    #this_figure.line(x='x_values',y='y_values', source = source,color = 'blue') #scatterplot
+                    print(this_figure)
+                    this_figure.toolbar.logo = None
+                    this_figure.toolbar_location = None
                     user_plots.append(this_figure) #append to figure array
                 else:
                     break
@@ -308,7 +323,6 @@ def graph_interface(request,user_id):
 def coin(request, id,time):
     # call coinHist function
     data = coinHist(id, time)
-    # data = coinHist(id)
     if data == False:
         return redirect("/graphs")
     info = requests.get("https://api.coinmarketcap.com/v2/ticker/"+id)
