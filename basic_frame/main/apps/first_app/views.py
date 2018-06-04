@@ -18,7 +18,6 @@ from bokeh.embed import components
 from bokeh.models import ColumnDataSource
 from bokeh.util.browser import view
 from bokeh.models import Range1d
-from .write_json import * #dont need anymore
 from .datetimecalculation import * #sids custom function
 from .erikdatetimecalc import * #erik's custom function built on sids
 
@@ -109,29 +108,10 @@ def show(request, id): #success page
                 if numCalls < 4: #only want to call four times max for each user
                     numCalls += 1
                     title = "Plot " + str(numCalls)
-                    coin_x_call = coinHistory(call.x_coin_id,call.UNIX_begin,call.UNIX_end, call.UNIX_zero)
-                    coin_y_call = coinHistory(call.y_coin_id,call.UNIX_begin,call.UNIX_end, call.UNIX_zero)
-                    #call finished
                     print('CALL::',call)
-                    x = axis(coin_x_call, call.x_key) #build the axes
-                    y = axis(coin_y_call, call.y_key)
-                    print('X_AXIS_ARRAY',len(x),':of:',y[0])
-                    print('Y_AXIS_ARRAY',len(y),':of:',x[0])
-                    #print('X::',x,'/n','Y::',y)
-                    #y = [1,2,3,4,5]
-                    #x = []
-                    data = {'x_values' : x , 'y_values' : y}
-                    #x_range = Range1d(start = 0, end = 10000)
-                    #y_range = Range1d(start = 0, end = 10000)
-                    data1 = pd.DataFrame(data)
-                    source = ColumnDataSource(data1)
-                    #x_range = x_range,y_range = y_range
-                    this_figure = figure(title = title,plot_width = 400, plot_height = 400,x_axis_label = call.x_label, y_axis_label = call.y_label) #build the figure
-                    this_figure.scatter('x_values', 'y_values',source = source)
-                    #this_figure.line(x='x_values',y='y_values', source = source,color = 'blue') #scatterplot
-                    print(this_figure)
-                    this_figure.toolbar.logo = None
-                    this_figure.toolbar_location = None
+                    plotdata = callAPI_assignAxes(call.x_coin_id,call.y_coin_id, call.x_key, call.y_key,call.UNIX_begin,call.UNIX_end, call.UNIX_zero)
+                    #call finished
+                    this_figure = makeFigure(plotdata,call.x_label,call.y_label, title, call.function)
                     user_plots.append(this_figure) #append to figure array
                 else:
                     break
@@ -229,6 +209,49 @@ def del_graph(request,user_id):
     else:
         return redirect('/graphs')
 
+def callAPI_assignAxes(x_id,y_id,x_key,y_key,begin,end,zero):
+    coin_x_call = coinHistory(x_id,begin,end,zero)
+    coin_y_call = coinHistory(y_id,begin,end,zero)
+    print('CALLS::',coin_x_call[0], coin_y_call[0])
+    #call finished
+    x = axis(coin_x_call, x_key) #build the axes
+    y = axis(coin_y_call, y_key)
+    print('X_AXIS_ARRAY',len(x),':of:',x[0])
+    print('Y_AXIS_ARRAY',len(y),':of:',y[0])
+    while len(x) != len(y): #forces the arrays to be equal
+        if len(x) > len(y):
+            x.pop()
+        if len(y) > len(x):
+            y.pop()
+    print('X_AXIS_ARRAY',len(x),':of:',x[0])
+    print('Y_AXIS_ARRAY',len(y),':of:',y[0])
+    return [x,y]
+
+def makeFigure(plotdata,xlabel,ylabel,title, function):
+    data = {'x_values' : plotdata[0], 
+            'y_values' : plotdata[1]
+            }
+    print('---------',title,'--------')
+    print(xlabel, data['x_values'][0])
+    print(ylabel, data['y_values'][0])
+    #x_range = Range1d(start = 0, end = 10000)
+    #y_range = Range1d(start = 0, end = 10000)
+    data1 = pd.DataFrame(data)
+    #if function == 'corr':
+    print('PANDAS::',data1)
+    # data2 = data1.corr(method = 'pearson')
+    # print('FUNCTION::',data2)
+    source = ColumnDataSource(data1)
+    print('SOURCE::', source)
+    #x_range = x_range,y_range = y_range
+    this_figure = figure(title = title,plot_width = 400, plot_height = 400,x_axis_label = xlabel, y_axis_label = ylabel) #build the figure
+    this_figure.scatter('x_values', 'y_values',source = source)
+    #this_figure.line(x='x_values',y='y_values', source = source,color = 'blue') #scatterplot
+    print('MAKEFIGURE::',this_figure)
+    this_figure.toolbar.logo = None
+    this_figure.toolbar_location = None
+    return this_figure
+
 def plot(request, graph_id): #pd = pandas #np = numpy #matplotlib = plt #statsmodels = ols
     if request.method == 'POST':
         user_id = str(request.session['user_id'])
@@ -243,7 +266,7 @@ def plot(request, graph_id): #pd = pandas #np = numpy #matplotlib = plt #statsmo
 
         timestamp1 = unix_time(datetime.strptime(request.POST['start'], "%Y-%m-%d"))
         timestamp2 = unix_time(datetime.strptime(request.POST['end'], "%Y-%m-%d"))
-
+        print(request.POST['start'], request.POST['end'])
         x_key = key_validation(request.POST['x_key'],'price')
         y_key = key_validation(request.POST['y_key'],'time')
 
@@ -266,9 +289,6 @@ def plot(request, graph_id): #pd = pandas #np = numpy #matplotlib = plt #statsmo
         #     return redirect('/graphs/dashboard/'+user_id)
     else:
         return redirect('/users/'+user_id)
-    #fig.savefig('./apps/first_app/static/django_app/img/examplebcplot' + str(graph_id) +'.svg', bbox_inches='tight') #saves the file to img folder
-    # fig.fig_to_html()
-    # plt.close(fig)
     return redirect('/users/'+user_id)
 
 def axis(array,key_str): #this function searches a passed in array for the key_str and returns the array of only those values
@@ -278,7 +298,7 @@ def axis(array,key_str): #this function searches a passed in array for the key_s
     return axis_var
 
 def key_validation(key, default):
-    if key != 'time' or key != 'price':
+    if key != 'time' and key != 'price':
         key = default
     return key
 
