@@ -1,46 +1,42 @@
-<!DOCTYPE html>
 <html>
-    <head>
-        <title>Your Graphs</title>
-        {% load static %}
-        <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="{% static 'django_app\css\styles.css' %}">
-        <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.16.min.css" rel="stylesheet" type="text/css">
-        <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.16.min.css" rel="stylesheet" type="text/css">
-        <link href="https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.16.min.css" rel="stylesheet" type="text/css">
 
+<head>
+    <title>Your Graphs</title>
+    {% load static %}
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="{% static 'django_app\css\styles.css' %}">
+    <link href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.16.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.16.min.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.16.min.css" rel="stylesheet" type="text/css">
 
-        <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.16.min.js"></script>
-        <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.16.min.js"></script>
-        <script src="https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.16.min.js"></script>
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.16.min.js"></script>
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.16.min.js"></script>
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-tables-0.12.16.min.js"></script>
+    {% autoescape off %}
+    {{ script }}
+    {% endautoescape %}
+</head>
 
-        {% autoescape off %}
-        {{ script }}
-        {% endautoescape %}
-
-    </head>
-
-    <body>
-        <div class='wrapper'>
-            <h3 class="title">{{full_name}}'s Graphs</h3>
-            <!-- <p>This page will list out all the user's graphs and allow the user to post any graph to social media. There will also
+<body>
+    <div class='wrapper'>
+        <h3>{{full_name}}'s Graphs</h3>
+        <!-- <p>This page will list out all the user's graphs and allow the user to post any graph to social media. There will also
             be a button to make a graph, which redirects to the make a graph page.</p>
         <p>This page will have any of the user's saved graphs or analyses they did in the past. Perhaps this page will have
             any of their followed coin graphs.</p> -->
-            <p>Your Email: {{email}}</p>
-            <p>Your ID: {{ID}}</p>
-            <p>Account Creation: {{created_at}}</p>
-
-            {% if messages %} {% for message in messages %}
-            <h6>{{message}}</h6>
-            {% endfor %} {% endif %}
-            {% if plots %} {% for plot in plots %}
-            <p>New Plot!!</p>
-            {% autoescape off %}
-            {{ plot }}
-            {% endautoescape %}
-            {% endfor %} {% endif %} 
-          
+        <p>Your Email: {{email}}</p>
+        <p>Your ID: {{ID}}</p>
+        <p>Account Creation: {{created_at}}</p>
+        {% if messages %} {% for message in messages %}
+        <h6>{{message}}</h6>
+        {% endfor %} {% endif %}
+        {% if plots %} {% for plot in plots %}
+        <div style = 'display:inline-block; margin:10px;'>
+        {% autoescape off %}
+        {{ plot }}
+        {% endautoescape %}
+        </div>
+        {% endfor %} {% endif %}
         <form action='/graphs'>
             <button class='logout' type='submit'>Homepage</button>
         </form>
